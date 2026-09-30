@@ -1,0 +1,17 @@
+# .deb Packages
+*.deb
+
+# Source packages
+*.dsc
+*.orig.tar.gz
+*.debian.tar.xz
+
+# Downloaded upstream release artifacts
+fresh-editor_*-1_amd64/
+fresh-editor_*-1_arm64/
+/usr/
+/DEBIAN/
+.fresh_release_name
+
+.idea/*
+.DS_Store

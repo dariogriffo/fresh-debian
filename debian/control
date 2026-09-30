@@ -1,0 +1,27 @@
+Source: fresh-editor
+Section: editors
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Build-Depends: debhelper-compat (= 13), wget, ca-certificates
+Standards-Version: 4.6.2
+Homepage: https://getfresh.dev
+Rules-Requires-Root: no
+
+Package: fresh-editor
+Architecture: amd64 arm64
+Depends: ${misc:Depends}, libc6 (>= 2.30), libgcc-s1 (>= 4.2)
+Description: terminal IDE and text editor with LSP and TypeScript plugins
+ Fresh is a fast, lightweight terminal-based IDE and text editor that aims to
+ be easy to pick up: familiar keybindings, mouse support, a command palette
+ and menus, with no modal editing required.
+ .
+ It provides syntax highlighting, multi-cursor editing, LSP integration
+ (completion, diagnostics, go to definition), a file explorer, split panes,
+ integrated terminals, and a TypeScript plugin runtime. Large files open
+ instantly. A session daemon keeps the editor running in the background so a
+ terminal can re-attach later (fresh -a), and fresh --web serves the same
+ editor to a browser.
+ .
+ The command is "fresh". This package repackages the upstream Debian build,
+ including its man page, desktop entry and icons; updates are delivered by
+ apt, and the built-in updater defers to it.

@@ -1,0 +1,22 @@
+fresh-editor (FULL_VERSION) DIST; urgency=low
+
+  ## fresh 0.5.2
+
+  - Fresh is now licensed GPL-3.0-or-later, up from GPL-2.0-only (#3328).
+  - Orchestrator mode: a bare `fresh`, with no file or flags, reopens the
+    workspace you were last in, running as a background daemon (#3306).
+  - New CLI commands: `workspace list` and `agent list/get/explain/wait/start`.
+  - Confirmations are now a modal dialog with one button per outcome (#3320).
+  - `Ctrl+Q` in a daemon session asks Detach / Quit / Cancel.
+  - Tokyo Night and Gruvbox ship as built-in themes (#3107).
+  - Search folds case by default everywhere (#3349).
+  - Interrupted saves are recoverable on the next start (#3383).
+  - Much faster JavaScript/TypeScript highlighting and a quieter idle
+    daemon (#3418).
+  - `echo 123 | fresh` opens the pipe instead of hanging (#3252).
+  - A language server can no longer delete files through
+    `workspace/applyEdit`.
+
+  The complete upstream changelog is installed as
+  /usr/share/doc/fresh-editor/changelog.gz and lives at
+  https://github.com/sinelaw/fresh/blob/master/CHANGELOG.md

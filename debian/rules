@@ -1,0 +1,57 @@
+#!/usr/bin/make -f
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+FRESH_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+# Upstream tags carry a "v" prefix and every release attaches a ready-made
+# .deb per architecture, named after the Debian architecture spelling and
+# always with Debian revision 1. Its payload (binary, man page, desktop entry,
+# icons, lintian override and the APT install receipt that makes the built-in
+# updater defer to apt) is repackaged as-is; only the docs are replaced.
+override_dh_auto_build:
+	@arch="$(DEB_HOST_ARCH)"; \
+	case "$$arch" in \
+		amd64|arm64) ;; \
+		*) echo "Unsupported architecture: $$arch"; exit 1 ;; \
+	esac; \
+	FRESH_RELEASE="fresh-editor_$(FRESH_VERSION)-1_$$arch"; \
+	echo "Downloading $$FRESH_RELEASE.deb..."; \
+	rm -rf "$$FRESH_RELEASE"; \
+	mkdir -p "$$FRESH_RELEASE"; \
+	wget -q "https://github.com/sinelaw/fresh/releases/download/v$(FRESH_VERSION)/$$FRESH_RELEASE.deb" -O "$$FRESH_RELEASE/upstream.deb"; \
+	dpkg-deb -x "$$FRESH_RELEASE/upstream.deb" "$$FRESH_RELEASE/root"; \
+	rm -f "$$FRESH_RELEASE/upstream.deb"; \
+	if [ ! -f "$$FRESH_RELEASE/root/usr/bin/fresh" ] || \
+	   [ ! -f "$$FRESH_RELEASE/root/usr/share/fresh-editor/install-receipt.toml" ]; then \
+		echo "Unexpected upstream package layout (missing usr/bin/fresh or install receipt)"; exit 1; \
+	fi; \
+	rm -f "$$FRESH_RELEASE/root/usr/share/doc/fresh-editor/changelog.Debian.gz" \
+	      "$$FRESH_RELEASE/root/usr/share/doc/fresh-editor/README.md.gz" \
+	      "$$FRESH_RELEASE/root/usr/share/doc/fresh-editor/copyright"; \
+	echo "$$FRESH_RELEASE" > .fresh_release_name
+
+override_dh_auto_install:
+	@FRESH_RELEASE=$$(cat .fresh_release_name); \
+	mkdir -p debian/fresh-editor; \
+	cp -a "$$FRESH_RELEASE/root/." debian/fresh-editor/
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+	@if [ -f .fresh_release_name ]; then \
+		FRESH_RELEASE=$$(cat .fresh_release_name); \
+		rm -rf "$$FRESH_RELEASE" .fresh_release_name || true; \
+	fi
+
+# Upstream already ships the binary stripped, and dwz has nothing to do on a
+# stripped binary. Library dependencies are declared in debian/control so the
+# source build matches the binary-only builds.
+override_dh_strip:
+
+override_dh_dwz:
+
+override_dh_shlibdeps:
