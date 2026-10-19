@@ -1,7 +1,5 @@
-ARG DEBIAN_DIST=bookworm
-FROM debian:$DEBIAN_DIST
+FROM debian:bookworm
 
-ARG DEBIAN_DIST
 ARG fresh_VERSION
 ARG BUILD_VERSION
 ARG FULL_VERSION
@@ -29,12 +27,10 @@ COPY output/changelog.Debian /output/usr/share/doc/fresh-editor/
 COPY output/README.md /output/usr/share/doc/fresh-editor/
 RUN chmod 644 /output/usr/share/doc/fresh-editor/*
 
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/fresh-editor/changelog.Debian
 RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/fresh-editor/changelog.Debian
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
 RUN sed -i "s/fresh_VERSION/$fresh_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 
 RUN cd /output && find usr -type f -print0 | sort -z | xargs -0 md5sum > DEBIAN/md5sums
-RUN dpkg-deb --build /output /fresh-editor_${FULL_VERSION}.deb
+RUN dpkg-deb -Zxz --build /output /fresh-editor_${FULL_VERSION}.deb

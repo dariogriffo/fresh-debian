@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Dario Griffo <dariogriffo@gmail.com>
 Homepage: https://getfresh.dev
 Package: fresh-editor
-Version: fresh_VERSION-BUILD_VERSION~DIST
+Version: fresh_VERSION-BUILD_VERSION~griffo
 Architecture: SUPPORTED_ARCHITECTURES
 Depends: libc6 (>= 2.30), libgcc-s1 (>= 4.2)
 Description: terminal IDE and text editor with LSP and TypeScript plugins
